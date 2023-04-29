@@ -1,0 +1,15 @@
+.borderColor {
+    background-color: #EBEBEB;
+    padding: 30px;
+}
+.HeaderText{
+    margin: 10px;
+}
+.appointmentsText {
+    margin-top: 5%;
+}
+.apptCard {
+    background-color: #EBEBEB;
+    margin-top: 1%;
+    margin-left: 1%;
+}
