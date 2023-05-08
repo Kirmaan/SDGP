@@ -1,19 +1,25 @@
 import '../App.css';
 import './style.css'
-import { TopNav, LabelText, GridCol, GridRow, Paragraph, H2, H3, H4,H5,Button,H1 } from 'govuk-react';
+import { TopNav, LabelText, GridCol, GridRow, Paragraph, H2, H3, H4,H5,Button,H1,TextArea } from 'govuk-react';
 import { useState,useEffect } from 'react';
 import Modal from './sub_components/Modal'
 import axios from 'axios';
 
-function Reception() {
+function Docter_Appointment() {
     const [show,setShow] = useState()
     const [users, setUsers] = useState([]);
     const [usersDetails, setUsersDetails] = useState([]);
     const [apptDetails, setApptDetails] = useState([]);
     const [isDoneLoading,setIsDoneLoading] = useState();
+    const [isOpen , setIsOpen] =  useState();
+    const [docsNotes , setDocsNotes] = useState()
     useEffect(() => {
         getAppts();
     }, []);
+
+    function toggle() {
+        setIsOpen((isOpen) => !isOpen);
+      }
 
    function showModal() {
         setShow(true)
@@ -74,6 +80,36 @@ function Reception() {
             });
     }
 
+    function handleNotesChange(e) {
+        setDocsNotes(e.target.value)
+        console.log(e.target.value)
+    }
+
+    function saveDocNotes(inputs) {
+        var searchData = { 
+            "number": inputs
+          }
+
+        var searchData2 = {
+            "notes": docsNotes
+        }  
+        axios.post('http://localhost/API3/', {
+            item: {number: searchData, notes: searchData2},
+        })
+            .then(response => {
+                const {data} = response;
+
+                console.log(response);
+                
+                alert('Docters Notes Have Been Saved!')
+
+                window.location.reload(true);
+            })
+            .catch(err => {
+                console.error(err);
+            });
+    }
+
     
 
     function displayComp() {
@@ -108,6 +144,23 @@ function Reception() {
                         <H5>
                             Time : {userDeets.Time}
                         </H5>
+
+                        <H5>Docters Notes : {userDeets.Doc_Notes}</H5>
+                        <Button onClick={() => {
+                            toggle()
+                        }}>Edit Notes</Button>
+                         {isOpen && 
+                         <div>
+                          <TextArea className="docNotes" onChange={(e) => {
+                            handleNotesChange(e)
+                          }} />  
+                          <br />
+                          <Button onClick={() => {
+                            saveDocNotes(userDeets.Appoint_ID_Num)
+                          }}>Save</Button>
+                         </div>
+                         
+                         }
                     
                         <Button onClick={() => {
                             cancelAppointment(userDeets.NHS_Number)
@@ -142,10 +195,10 @@ function Reception() {
 
     return (
         <div className="App">
-            <TopNav company={<TopNav.Anchor href="http://localhost:3000" target="new"><TopNav.IconTitle >AFQC Labs</TopNav.IconTitle></TopNav.Anchor>} serviceTitle={<TopNav.NavLink href="https://example.com" target="new">Appointments</TopNav.NavLink>} />
+            <TopNav company={<TopNav.Anchor href="http://localhost:3000" target="new"><TopNav.IconTitle >AFQC Labs</TopNav.IconTitle></TopNav.Anchor>} serviceTitle={<><TopNav.NavLink href="http://localhost:3000/DocterAppointment" target="new">Appointments</TopNav.NavLink>&nbsp;<TopNav.NavLink href="http://localhost:3000/DocterPatient" target="new"> Patient Records</TopNav.NavLink></>} />
             <div className='borderColor'>
                 <H2 className='HeaderText'>
-                    Reception Appointment Management
+                    Docter Appointment Management
                 </H2>
                 
             </div>
@@ -155,4 +208,4 @@ function Reception() {
     );
 }
 
-export default Reception;
+export default Docter_Appointment;

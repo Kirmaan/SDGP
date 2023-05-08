@@ -5,7 +5,7 @@ import { useState,useEffect } from 'react';
 import Modal from './sub_components/Modal'
 import axios from 'axios';
 
-function Reception() {
+function Docter_Patient() {
     const [show,setShow] = useState()
     const [users, setUsers] = useState([]);
     const [usersDetails, setUsersDetails] = useState([]);
@@ -56,62 +56,38 @@ function Reception() {
             });
     }
 
-    function cancelAppointment(inputs) {
-        var searchData = { 
-            "number": inputs
-          }
-        axios.post('http://localhost/API2/', {
-            item: {number: searchData},
-        })
-            .then(response => {
-                const {data} = response;
-                console.log(response);
-                window.location.reload(true);
-                
-            })
-            .catch(err => {
-                console.error(err);
-            });
-    }
 
     
 
     function displayComp() {
-        return users.map(function (userDeets) {
+        return usersDetails.map(function (userDeets) {
             return (
                 <div>
                     <GridRow>
-                    <GridCol setWidth="one-half" className='apptCard'>
-                        <H4>
-                            Appointment ID No : {userDeets.Appoint_ID_Num}
-                        </H4>
-                        <H5>
-                            Date : {userDeets.Date}
-                        </H5>
-                        <H5>
-                            Time : {userDeets.Time}
-                        </H5>
+                    <GridCol setWidth="one-half" className='patientCard'>
+                        <br />
+                        <H5>Patient Name : {userDeets.First_Name}  {userDeets.Last_Name} </H5>
                         <Button onClick = {() => {
                             showModal()
                         }}>
-                        View Appointment
+                        View Patient
                         </Button>
                     </GridCol>
                     
                 </GridRow>
                 <Modal show={show} handleClose={() => { hideModal()}}>
                     
-                        {displayComp2()}
-                        <H5>
-                            Date : {userDeets.Date}
-                        </H5>
-                        <H5>
-                            Time : {userDeets.Time}
-                        </H5>
-                    
-                        <Button onClick={() => {
-                            cancelAppointment(userDeets.NHS_Number)
-                        }}>Cancel Appointment</Button>
+                    <H5>First Name : {userDeets.First_Name}</H5>
+                    <H5>Last Name : {userDeets.Last_Name} </H5>
+                    <H5>Vaccinated? : {userDeets.Vaccine_Status? (
+                        "No"
+                    ) : (
+                        "Yes"
+                    )}</H5>
+                    <H5>NHS Number {userDeets.NHS_Number}</H5>
+                    <H5>Email : {userDeets.Email}</H5>
+                    <H5>Mobile No : {userDeets.Mobile_No}</H5>
+                    <H5>Surgery Location : {userDeets.Surgery_Location}</H5>
                      </Modal>
                 </div>
             )
@@ -119,33 +95,12 @@ function Reception() {
     }
 
 
-    function displayComp2() {
-        return usersDetails.map(function (userDeets) {
-            return (
-                <div>
-                    <H2>First Name : {userDeets.First_Name}</H2>
-                    <H2>Last Name : {userDeets.Last_Name} </H2>
-                    <H5>Vaccinated? {userDeets.Vaccine_Status? (
-                        "No"
-                    ) : (
-                        "Yes"
-                    )}</H5>
-                    <H5>NHS Number {userDeets.NHS_Number}</H5>
-                </div>
-            )
-        })
-    }
-
-
-
-
-
     return (
         <div className="App">
-            <TopNav company={<TopNav.Anchor href="http://localhost:3000" target="new"><TopNav.IconTitle >AFQC Labs</TopNav.IconTitle></TopNav.Anchor>} serviceTitle={<TopNav.NavLink href="https://example.com" target="new">Appointments</TopNav.NavLink>} />
+            <TopNav company={<TopNav.Anchor href="http://localhost:3000" target="new"><TopNav.IconTitle >AFQC Labs</TopNav.IconTitle></TopNav.Anchor>} serviceTitle={<><TopNav.NavLink href="http://localhost:3000/DocterAppointment" target="new">Appointments</TopNav.NavLink>&nbsp;<TopNav.NavLink href="http://localhost:3000/DocterPatient" target="new"> Patient Records</TopNav.NavLink></>} />
             <div className='borderColor'>
                 <H2 className='HeaderText'>
-                    Reception Appointment Management
+                    Docter Patient Management
                 </H2>
                 
             </div>
@@ -155,4 +110,4 @@ function Reception() {
     );
 }
 
-export default Reception;
+export default Docter_Patient;
